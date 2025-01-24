@@ -20,9 +20,10 @@ const SignUp = () => {
     }
     setisSubmitting(true);
     try {
-      const result = await createUser(form.email, form.password, form.password);
+      const result = await createUser(form.email, form.password, form.username);
       // for gloabal state
       router.replace("/home");
+      console.log(result);
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert("Error", String(error.message));

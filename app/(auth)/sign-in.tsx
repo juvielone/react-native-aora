@@ -20,6 +20,7 @@ const SignIn = () => {
     }
     setisSubmitting(true);
     try {
+      console.log(form);
       const result = await signIn(form.email, form.password);
       // for gloabal state
       router.replace("/home");
@@ -29,6 +30,12 @@ const SignIn = () => {
       }
     }
   };
+
+  // const submit = async () => {
+  //   setisSubmitting(true);
+
+  //   router.replace("/home");
+  // };
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>

@@ -1,5 +1,5 @@
 import { getCurrentUser } from "@/lib/appwrite";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type StateContextType = {
   isLoggedIn: boolean | null;
@@ -11,7 +11,13 @@ type StateContextType = {
 };
 
 const GlobalContext = createContext<null | StateContextType>(null);
-
+export const useGlobalContext = () => {
+  const context = useContext(GlobalContext);
+  if (!context) {
+    throw new Error("useGlobalContext must be used within a GlobalProvider");
+  }
+  return context;
+};
 type ContextProviderProps = {
   children: React.ReactNode;
 };

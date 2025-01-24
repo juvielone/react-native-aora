@@ -21,7 +21,8 @@ const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
       />
       <Text
         style={{ color: color }}
-        className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
+        className={`${focused ? "font-psemibold" : "font-pregular"}
+         text-xs  w-full`}
       >
         {name}
       </Text>
@@ -39,10 +40,10 @@ const TabsLayout = () => {
           tabBarInactiveTintColor: "#CDCDE0",
           tabBarStyle: {
             backgroundColor: "#161622",
-            borderTopWidth: 1,
+            borderTopWidth: 0.2,
             borderTopColor: "#232533",
-            height: 84,
-            paddingTop: 12,
+            height: 75,
+            paddingTop: 5,
           },
         }}
       >
