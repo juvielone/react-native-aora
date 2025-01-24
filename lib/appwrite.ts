@@ -118,3 +118,20 @@ export const getAllPost = async () => {
     }
   }
 };
+
+export const getLatestPost = async () => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videosCollectionId,
+      [Query.orderDesc("$createdAt"), Query.limit(7)]
+    );
+    return posts.documents;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message); // Safely use the message property
+    } else {
+      throw new Error(String(error)); // Handle non-Error types
+    }
+  }
+};

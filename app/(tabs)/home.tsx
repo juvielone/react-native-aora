@@ -12,7 +12,7 @@ import { images } from "@/constants";
 import SearchInput from "@/components/SearchInput";
 import Trending from "@/components/Trending";
 import EmptyState from "@/components/EmptyState";
-import { getAllPost } from "@/lib/appwrite";
+import { getAllPost, getLatestPost } from "@/lib/appwrite";
 import { Models } from "react-native-appwrite";
 import useAppwrite from "@/lib/useAppwrite";
 import VideoCard from "@/components/VideoCard";
@@ -21,6 +21,7 @@ const Home = () => {
   const mockData = [{ id: 1 }, { id: 2 }, { id: 3 }];
 
   const { data: posts, refetch } = useAppwrite(getAllPost);
+  const { data: latestPost } = useAppwrite(getLatestPost);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -35,14 +36,6 @@ const Home = () => {
         data={posts}
         keyExtractor={(item: any) => item.$id}
         renderItem={({ item }) => {
-          // const {title, thumbnail,video, creator} = item;
-          // const data = {title,thumbnail,video,
-          //   creator: {
-          //     username: creator.username,
-          //     avatar: creator.avatar
-          //   }
-          // }
-          // console.log(item);
           return <VideoCard video={item as any} />;
         }}
         // renderItem={({ item }) => <VideoCard video={item} />}
@@ -74,7 +67,7 @@ const Home = () => {
               <Text className="text-gray-100 text-lg font-pregular mb-3">
                 Latest Videos
               </Text>
-              <Trending items={mockData ?? []} />
+              <Trending videos={(latestPost as any) ?? []} />
             </View>
           </View>
         )}
