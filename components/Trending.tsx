@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -52,7 +52,7 @@ const zoomOut = {
 
 const TrendingItem: React.FC<TrendingItemProps> = ({ activeItem, item }) => {
   const [play, setPlay] = useState(false);
-
+  console.log(item.video);
   return (
     <Animatable.View
       className="mr-5"
@@ -62,14 +62,22 @@ const TrendingItem: React.FC<TrendingItemProps> = ({ activeItem, item }) => {
       {play ? (
         <Video
           source={{ uri: item.video }}
+          style={{
+            width: 208, // Corresponds to w-52 (52 * 4)
+            height: 288, // Corresponds to h-72 (72 * 4)
+          }}
           className="w-52 h-72 rounded-[35px] mt-3 bg-white/10"
           resizeMode={ResizeMode.CONTAIN}
           useNativeControls
           shouldPlay
           onPlaybackStatusUpdate={(status) => {
+            console.log(status);
             if (status.isLoaded && status.didJustFinish) {
               setPlay(false);
             }
+          }}
+          onError={(error) => {
+            console.error("Video Error:", error);
           }}
         />
       ) : (
@@ -100,15 +108,15 @@ const Trending: React.FC<VideoCardProps> = ({ videos }) => {
     videos.length > 0 ? videos[0].$id : ""
   );
 
-  const viewableItemsChanged = ({
-    viewableItems,
-  }: {
-    viewableItems: ViewToken[];
-  }) => {
-    if (viewableItems.length > 0) {
-      setActiveItem(viewableItems[0].key as string);
-    }
-  };
+  const viewableItemsChanged = useCallback(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      // if items is not empty make the active item the first
+      if (viewableItems.length > 0) {
+        setActiveItem(viewableItems[0].key as string);
+      }
+    },
+    []
+  );
 
   return (
     <FlatList
@@ -117,6 +125,7 @@ const Trending: React.FC<VideoCardProps> = ({ videos }) => {
       renderItem={({ item }) => (
         <TrendingItem activeItem={activeItem} item={item} />
       )}
+      //triggered whenever the viewability of items in a FlatList changes(visible)
       onViewableItemsChanged={viewableItemsChanged}
       viewabilityConfig={{
         itemVisiblePercentThreshold: 70,

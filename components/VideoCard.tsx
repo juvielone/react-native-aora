@@ -1,4 +1,5 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
+import { ResizeMode, Video } from "expo-av";
 import { Models } from "react-native-appwrite";
 import { useState } from "react";
 import { icons } from "@/constants";
@@ -8,14 +9,14 @@ interface Creator {
   avatar: string;
 }
 
-interface Video extends Models.Document {
+interface VideoProp extends Models.Document {
   title: string;
   thumbnail: string;
   video: string;
   creator: Creator;
 }
 interface VideoCardProps {
-  video: Video;
+  video: VideoProp;
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
@@ -54,7 +55,22 @@ const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
       </View>
 
       {play ? (
-        <Text className="text-white">Playing</Text>
+        <Video
+          source={{ uri: video.video }}
+          className="w-full h-60 rounded-xl mt-3"
+          resizeMode={ResizeMode.CONTAIN}
+          useNativeControls
+          shouldPlay
+          onPlaybackStatusUpdate={(status) => {
+            console.log(status);
+            if (status.isLoaded && status.didJustFinish) {
+              setPlay(false);
+            }
+          }}
+          onError={(error) => {
+            console.error("Video Error:", error);
+          }}
+        />
       ) : (
         <TouchableOpacity
           className="w-full h-60 rounded-xl mt-3 relative justify-center items-center"

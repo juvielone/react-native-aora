@@ -135,3 +135,23 @@ export const getLatestPost = async () => {
     }
   }
 };
+
+export const searchPosts = async (query: string | string[]) => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videosCollectionId,
+      [Query.search("title", query as string)]
+    );
+    console.log("searchPosts");
+    console.log(posts.documents);
+
+    return posts.documents;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message); // Safely use the message property
+    } else {
+      throw new Error(String(error)); // Handle non-Error types
+    }
+  }
+};
