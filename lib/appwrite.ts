@@ -155,3 +155,36 @@ export const searchPosts = async (query: string | string[]) => {
     }
   }
 };
+
+export const getUserPost = async (userId: string | string[]) => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videosCollectionId,
+      [Query.equal("creator", userId as string)]
+    );
+    console.log("searchPosts");
+    console.log(posts.documents);
+
+    return posts.documents;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message); // Safely use the message property
+    } else {
+      throw new Error(String(error)); // Handle non-Error types
+    }
+  }
+};
+
+export const signOut = async () => {
+  try {
+    const session = await account.deleteSession("current");
+    return session;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message); // Safely use the message property
+    } else {
+      throw new Error(String(error)); // Handle non-Error types
+    }
+  }
+};
